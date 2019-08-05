@@ -19,3 +19,8 @@
 
 ![](https://kongjhong-image.oss-cn-beijing.aliyuncs.com/img/{517CB287-70CA-74B3-664A-9B2631C8E0DD}.jpg)
 
+
+
+**Golang执行原理**
+
+![](https://kongjhong-image.oss-cn-beijing.aliyuncs.com/img/{6AA88781-375D-16DA-E4B9-99EF7CBC2FAD}.jpg)
