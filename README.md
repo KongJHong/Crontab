@@ -22,16 +22,16 @@
 ### 项目结构
 
 ```
-——————crontab
+——————Crontab
  |
  |---master：master框架，主要管理路由等前端逻辑
  |     |---main:程序启动文件夹
  |     |    |---master.go:程序启动main主文件
  |     |    |---master.json:配置文件
  |     |
- |	   |---ApiServer.go:HTTP路由管理，前端到后台任务的CRUD
+ |     |---ApiServer.go:HTTP路由管理，前端到后台任务的CRUD
  |     |---Config.go:程序配置类，读取main/master.json中的配置
- |	   |---JobMgr.go:任务管理类，实际管理任务的增删改查（与ETCD交互）
+ |     |---JobMgr.go:任务管理类，实际管理任务的增删改查（与ETCD交互）
  |
  |
  |
