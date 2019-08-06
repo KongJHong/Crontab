@@ -29,6 +29,10 @@
  |     |    |---master.go:程序启动main主文件
  |     |    |---master.json:配置文件
  |     |
+ |     |---webroot:静态页面文件夹
+ |     |    |---index.html:前端主界面，调用master的API
+ |     |
+ |     |
  |     |---ApiServer.go:HTTP路由管理，前端到后台任务的CRUD
  |     |---Config.go:程序配置类，读取main/master.json中的配置
  |     |---JobMgr.go:任务管理类，实际管理任务的增删改查（与ETCD交互）
@@ -46,11 +50,19 @@
 
 ```
 
-#### 第一部分
+#### Master
 
 - 搭建go项目框架，配置文件，命令行参数，线程配置
 - 给web后台提供http API,用于管理job
 - 写一个web后台的前端页面，bootstrap+jquery，前后端分离开发
+
+#### Worker
+
+- 从etcd中把job同步到内存中
+- 实现调度模块，基于cron表达式调度N个job
+- 实现执行模块，并发的执行多个job
+- 对job的分布式锁，防止集群并发
+- 把执行日志保存到`mongodb`
 
 
 

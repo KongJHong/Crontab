@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:58:52
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-06 09:40:54
+ * @LastEditTime: 2019-08-06 15:43:10
  */
 
  package common
@@ -22,7 +22,7 @@ type Job struct{
 
 //Response HTTP接口应答
 type Response struct{
-	Error int  			`json:"error"`	//0表示正常
+	Errno int  			`json:"errno"`	//0表示正常
 	Msg string 			`json:"msg"`
 	Data interface{} 	`json:"data"`
 }
@@ -36,7 +36,7 @@ func BuildResponse(errno int,msg string,data interface{}) (resp []byte,err error
 	)
 
 
-	response.Error = errno
+	response.Errno = errno
 	response.Msg = msg
 	response.Data = data
 

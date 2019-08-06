@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:28:14
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-05 22:12:44
+ * @LastEditTime: 2019-08-06 14:25:01
  */
 
  package master
@@ -21,6 +21,7 @@ import (
 	 APIWriteTimeout int	`json:"apiWriteTimeout"`
 	 EtcdEndpoints []string `json:"etcdEndpoints"`
 	 EtcdDialTimeout int 	`json:"etcdDialTimeout"`
+	 WebRoot		string	`json:"webroot"`
  }
 
 

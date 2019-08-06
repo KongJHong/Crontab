@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:05:30
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-06 10:58:43
+ * @LastEditTime: 2019-08-06 14:24:51
  */
 
  package master
@@ -184,6 +184,8 @@ func InitAPIServer() (err error){
 		mux *http.ServeMux
 		listener net.Listener
 		httpServer *http.Server
+		staticDir http.Dir		//静态文件根目录
+		staticHandler http.Handler //静态文件的Http回调
 	)
 
 	
@@ -195,7 +197,14 @@ func InitAPIServer() (err error){
 	mux.HandleFunc("/job/list",handleJobList)		//查
 	mux.HandleFunc("/job/kill",handleJobKill)		//杀死任务
 
+	//静态文件目录 7.9
+	staticDir = http.Dir(G_config.WebRoot)				//设置静态文件根目录
+	staticHandler = http.FileServer(staticDir)		//系统设置
+	mux.Handle("/",http.StripPrefix("/", staticHandler)) //http.StripPrefix是抹掉/ 然后去./webroot找index.html
 
+	
+
+	
 	//启动TCP监听
 	if listener,err = net.Listen("tcp", ":"+strconv.Itoa(G_config.APIPort));err != nil{
 		return 
