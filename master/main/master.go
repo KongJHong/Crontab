@@ -4,13 +4,14 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:02:05
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-05 22:15:26
+ * @LastEditTime: 2019-08-06 09:40:46
  */
 
 
 package main
 
 import (
+	"time"
 	"flag"
 	"fmt"
 	"runtime"
@@ -59,13 +60,17 @@ func main(){
 	}
 
 	//启动API HTTP服务
-	if err = master.InitAPIServer();err != nil{
+	if err = master.InitAPIServer();err != nil{	//HTTP在协程中跑的
 		goto ERR
 	}
 
-	fmt.Println("正常退出")
+	
 	//正常退出
-	return 
+	for{
+		time.Sleep(1 * time.Second)
+	}
+	
+	
 ERR:
 	fmt.Println(err)
 }
