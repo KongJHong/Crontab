@@ -41,7 +41,13 @@
  |
  |
  |---worker
- |
+ |     |---main:worker程序启动文件夹
+ |     |    |---worker.go: main文件
+ |     |    |---worker.json:worker配置文件
+ |     |
+ |     |---Config.go: worker配置类，读取main/worker.json的配置
+ |     |---JobMgr.go:任务管理类，设置ETCD监听任务，把变化任务推到Scheduler中
+ |     |---Scheduler.go:任务调度功能类，包含定时器，任务执行
  |
  |
  |---common：共享的类或者结构

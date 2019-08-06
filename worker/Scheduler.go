@@ -1,3 +1,12 @@
+/*
+ * @Descripttion: 任务调度功能类，包含定时器，任务执行
+ * @version: 
+ * @Author: KongJHong
+ * @Date: 2019-08-06 21:10:09
+ * @LastEditors: KongJHong
+ * @LastEditTime: 2019-08-06 22:26:33
+ */
+
 package worker
 
 import (
