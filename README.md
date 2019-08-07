@@ -39,9 +39,6 @@
  |     |---LogSink.go:日志持久化保存，连接Mongodb
  |     |---LogMgr.go:日志查看
  |
- |
- |
- |
  |---worker
  |     |---main:worker程序启动文件夹
  |     |    |---worker.go: main文件
@@ -52,7 +49,7 @@
  |     |---Scheduler.go:任务调度功能类，包含定时器，任务执行
  |     |---Executor.go:执行器，执行任务
  |     |---JobLock.go:分布式锁，抢占分布式锁
- |
+ |     |---Register.go:worker服务注册到ETCD
  |
  |---common：共享的类或者结构
  |     |---Protocol.go:保存一些交互协议类

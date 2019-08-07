@@ -26,6 +26,13 @@
 	 runtime.GOMAXPROCS(runtime.NumCPU())
  }
  
+ func init(){
+	//初始化命令行参数
+	initArgs()
+	
+	//初始化线程,要发挥它的多核优势，就必须限制它的线程数量等于它的核心数量
+	initEnv()
+ }
  
  func main(){
  
@@ -33,14 +40,15 @@
 		 err error
 	 )
  
-	 //初始化命令行参数
-	 initArgs()
- 
-	 //初始化线程,要发挥它的多核优势，就必须限制它的线程数量等于它的核心数量
-	 initEnv()
+	
  
 	 //加载配置
 	 if err = worker.InitConfig(confFile);err != nil{
+		 goto ERR
+	 }
+
+	 //服务注册
+	 if err = worker.InitRegister();err != nil{
 		 goto ERR
 	 }
 
