@@ -1,0 +1,71 @@
+/*
+ * @Descripttion: 任务执行器 
+ * @version: 
+ * @Author: KongJHong
+ * @Date: 2019-08-07 09:53:45
+ * @LastEditors: KongJHong
+ * @LastEditTime: 2019-08-07 10:20:39
+ */
+
+ package worker
+
+import (
+	"time"
+	"os/exec"
+	"Crontab/common"
+	"context"
+)
+
+
+//Executor 任务执行器
+type Executor struct{
+	
+}
+
+var (
+	G_executor *Executor
+)
+ 
+//ExecuteJob 用来执行一个任务
+func (executor *Executor)ExecuteJob(info *common.JobExecuteInfo){
+	go func(){
+
+
+		var (
+			cmd *exec.Cmd
+			err error
+			output []byte
+			result *common.JobExecuteResult
+		)
+
+		//任务结果
+		result = &common.JobExecuteResult{
+			ExecuteInfo:info,
+			Output:make([]byte,0),
+		}
+
+		//记录开始时间
+		result.StartTime = time.Now()
+
+		//执行shell命令
+		cmd = exec.CommandContext(context.TODO(), "C:\\cygwin64\\bin\\bash.exe", "-c",info.Job.Command)
+
+		//执行并捕获输出
+		output,err = cmd.CombinedOutput()
+
+		//任务结束时间
+		result.EndTime = time.Now()
+		result.Output = output
+		result.Err = err
+
+		//任务执行完成后，把执行的结果返回给Scheduler，Scheduler会从excuting Table中删除执行记录
+		G_scheduler.PushJobResult(result)
+	}()
+}
+
+ 
+//InitExecutor 初始化执行器
+func InitExecutor() (err error){
+	 G_executor = &Executor{}
+	 return
+}

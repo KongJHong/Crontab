@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:58:52
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-06 21:38:24
+ * @LastEditTime: 2019-08-07 10:03:42
  */
 
  package common
@@ -30,6 +30,14 @@ type JobSchedulePlan struct{
 	NextTime time.Time		//下次调度时间
 }
 
+
+//JobExecuteInfo 任务执行状态
+type JobExecuteInfo struct{
+	Job *Job	//任务信息
+	PlanTime time.Time	//理论上的调度时间
+	RealTime time.Time	//实际的调度时间
+}
+
 //Response HTTP接口应答
 type Response struct{
 	Errno int  			`json:"errno"`	//0表示正常
@@ -41,6 +49,15 @@ type Response struct{
 type JobEvent struct{
 	EventType int //SAVE,DELETE
 	Job *Job
+}
+
+//JobExecuteResult 任务执行结果
+type JobExecuteResult struct{
+	ExecuteInfo *JobExecuteInfo		//执行状态
+	Output 		[]byte				//脚本输出
+	Err 		error				//脚本错误原因
+	StartTime 	time.Time			//启动时间
+	EndTime		time.Time			//结束时间
 }
 
 //BuildResponse 应答方法
@@ -109,6 +126,17 @@ func BuildJobSchedulePlan(job *Job)(jobSchedulePlan *JobSchedulePlan,err error){
 		Job:job,
 		Expr:expr,
 		NextTime:expr.Next(time.Now()),
+	}
+
+	return 
+}
+
+//BuildJobExecuteInfo 构造执行状态信息
+func BuildJobExecuteInfo(planSchedulePlan *JobSchedulePlan) (jobExecuteInfo *JobExecuteInfo){
+	jobExecuteInfo = &JobExecuteInfo{
+		Job:planSchedulePlan.Job,
+		PlanTime:planSchedulePlan.NextTime,	//计算调度时间
+		RealTime:time.Now(),				//真实调度时间
 	}
 
 	return 
