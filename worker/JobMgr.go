@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 22:00:58
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-06 21:21:47
+ * @LastEditTime: 2019-08-07 10:42:00
  */
 
  package worker
@@ -27,9 +27,9 @@ import (
 	 watcher clientv3.Watcher
  }
 
- var (
-	 //单例
-	 G_jobMgr *JobMgr
+var (
+	//单例
+	G_jobMgr *JobMgr
  )
 
 
@@ -145,3 +145,10 @@ func (jobMgr *JobMgr)watchJobs()(err error){
 	return 
  }
 
+
+//CreateJobLock 创建任务执行锁
+func (jobMgr *JobMgr)CreateJobLock(jobName string)(jobLock *JobLock){
+	//返回一把锁
+	jobLock = InitJobLock(jobName, jobMgr.client, jobMgr.lease)
+	return 
+}

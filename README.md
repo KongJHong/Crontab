@@ -48,11 +48,14 @@
  |     |---Config.go: worker配置类，读取main/worker.json的配置
  |     |---JobMgr.go:任务管理类，设置ETCD监听任务，把变化任务推到Scheduler中
  |     |---Scheduler.go:任务调度功能类，包含定时器，任务执行
+ |     |---Executor.go:执行器，执行任务
+ |     |---JobLock.go:分布式锁，抢占分布式锁
  |
  |
  |---common：共享的类或者结构
  |     |---Protocol.go:保存一些交互协议类
  |     |---Constants.go:系统公用常量
+ |     |---Errors.go:可复用的错误信息
 
 ```
 
