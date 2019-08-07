@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:28:14
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-06 14:25:01
+ * @LastEditTime: 2019-08-07 19:38:21
  */
 
  package master
@@ -16,12 +16,14 @@ import (
  
  //Config 程序配置
  type Config struct{
-	 APIPort int			`json:"apiPort"`
-	 APIReadTimeout int		`json:"apiReadTimeout"`
-	 APIWriteTimeout int	`json:"apiWriteTimeout"`
-	 EtcdEndpoints []string `json:"etcdEndpoints"`
-	 EtcdDialTimeout int 	`json:"etcdDialTimeout"`
-	 WebRoot		string	`json:"webroot"`
+	APIPort 				int			`json:"apiPort"`
+	APIReadTimeout 			int			`json:"apiReadTimeout"`
+	APIWriteTimeout 		int			`json:"apiWriteTimeout"`
+	EtcdEndpoints 			[]string 	`json:"etcdEndpoints"`
+	EtcdDialTimeout 		int 		`json:"etcdDialTimeout"`
+	WebRoot					string		`json:"webroot"`
+	MongodbURI 				string		`json:"mongodbUri"`
+	MongodbConnectTimeout 	int 		`json:"mongodbConnectTimeout"`
  }
 
 

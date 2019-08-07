@@ -36,6 +36,8 @@
  |     |---ApiServer.go:HTTP路由管理，前端到后台任务的CRUD
  |     |---Config.go:程序配置类，读取main/master.json中的配置
  |     |---JobMgr.go:任务管理类，实际管理任务的增删改查（与ETCD交互）
+ |     |---LogSink.go:日志持久化保存，连接Mongodb
+ |     |---LogMgr.go:日志查看
  |
  |
  |

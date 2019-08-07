@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:02:05
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-06 09:40:46
+ * @LastEditTime: 2019-08-07 20:01:05
  */
 
 
@@ -37,20 +37,28 @@ func initEnv(){
 }
 
 
+func init(){
+	//初始化命令行参数
+	initArgs()
+
+	//初始化线程,要发挥它的多核优势，就必须限制它的线程数量等于它的核心数量
+	initEnv()
+}
+
+
 func main(){
 
 	var (
 		err error
 	)
 
-	//初始化命令行参数
-	initArgs()
-
-	//初始化线程,要发挥它的多核优势，就必须限制它的线程数量等于它的核心数量
-	initEnv()
-
 	//加载配置
 	if err = master.InitConfig(confFile);err != nil{
+		goto ERR
+	}
+
+	//日志管理器
+	if err = master.InitLogMgr();err != nil{
 		goto ERR
 	}
 

@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:28:14
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-07 16:07:27
+ * @LastEditTime: 2019-08-07 19:37:56
  */
 
  package worker
@@ -24,6 +24,7 @@ import (
 	MemoryCache 			int 		`json:"memoryCache"`
 	JobLogBatchSize			int			`json:"jobLogBatchSize"`
 	JobLogCommitTimeout		int 		`json:"jobLogCommitTimeout"`
+	
  }
 
 

@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:05:30
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-06 14:24:51
+ * @LastEditTime: 2019-08-07 20:02:03
  */
 
  package master
@@ -177,6 +177,56 @@ ERR:
 }
 
 
+//handleJobKill 查询任务日志
+func handleJobLog(resp http.ResponseWriter,req *http.Request){
+	
+	var (
+		err error
+		name string	//任务名字
+		skipParam string//从第几条开始
+		limitParam string//限制返回多少条
+		skip int
+		limit int
+		logArr []*common.JobLog
+		bytes []byte
+	)
+	
+	//解析GET参数
+	if err = req.ParseForm();err != nil{
+		goto ERR 
+	}
+
+	//获取请求参数 /cron/job?name=job10&skip=0&limit=10
+	name = req.Form.Get("name")
+	limitParam = req.Form.Get("limit")
+	skipParam = req.Form.Get("skip")
+
+	if skip,err = strconv.Atoi(skipParam);err != nil{
+		skip = 0
+	}
+
+	if limit,err = strconv.Atoi(limitParam);err != nil{
+		limit = 20
+	}
+
+	if logArr,err = G_logMgr.ListLog(name, skip, limit);err != nil{
+		goto ERR
+	}
+
+	//返回正常应答
+	if bytes,err = common.BuildResponse(0, "success", logArr);err == nil{
+		resp.Write(bytes)
+	}
+
+	return 
+ERR:
+	//错误应答
+	if bytes,err = common.BuildResponse(-1, err.Error(), nil);err == nil{
+		resp.Write(bytes)
+	}
+}
+
+
 //InitAPIServer HTTP服务器初始化服务函数,开启HTTP服务器
 func InitAPIServer() (err error){
 
@@ -196,6 +246,7 @@ func InitAPIServer() (err error){
 	mux.HandleFunc("/job/delete",handleJobDelete)	//删
 	mux.HandleFunc("/job/list",handleJobList)		//查
 	mux.HandleFunc("/job/kill",handleJobKill)		//杀死任务
+	mux.HandleFunc("/job/log", handleJobLog)		//任务日志查询
 
 	//静态文件目录 7.9
 	staticDir = http.Dir(G_config.WebRoot)				//设置静态文件根目录
