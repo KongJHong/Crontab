@@ -3,5 +3,23 @@
     "etcdEndpoints":["192.168.80.129:2379"],
 
     "etcd连接超时":"单位是毫秒",
-    "etcdDialTimeout":5000
+    "etcdDialTimeout":5000,
+
+    "Shell命令执行位置":"区分好windows和linux,windows是利用cygwin，linux是/etc/bin/bash",
+    "shellLocation":"C:\\cygwin64\\bin\\bash.exe",
+
+    "mongodb地址":"采用mongodb URI",
+    "mongodbUri":"mongodb://192.168.80.129:27017",
+
+    "mongodb连接超时时间":"单位ms",
+    "mongodbConnectTimeout":5000,
+
+    "日志批次大小":"为了减少mongodb网络往返，打包成一批写入",
+    "jobLogBatchSize":100,
+
+    "日志缓存最大值":"默认1000,批处理插入mongodb的数量为jobLogBatchSize，应该大于该值",
+    "memoryCache":1000,
+
+    "自动提交的超时时间":"单位ms.在批次未达到阈值之前，超时会自动提交给batch",
+    "jobLogCommitTimeout":1000
 }

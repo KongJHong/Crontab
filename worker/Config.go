@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:28:14
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-06 20:18:37
+ * @LastEditTime: 2019-08-07 16:07:27
  */
 
  package worker
@@ -16,8 +16,14 @@ import (
  
  //Config 程序配置
  type Config struct{
-	EtcdEndpoints []string `json:"etcdEndpoints"`
-	EtcdDialTimeout int 	`json:"etcdDialTimeout"`
+	EtcdEndpoints 			[]string 	`json:"etcdEndpoints"`
+	EtcdDialTimeout 		int 		`json:"etcdDialTimeout"`
+	ShellLocation			string  	`json:"shellLocation"`
+	MongodbURI 				string		`json:"mongodbUri"`
+	MongodbConnectTimeout 	int 		`json:"mongodbConnectTimeout"`
+	MemoryCache 			int 		`json:"memoryCache"`
+	JobLogBatchSize			int			`json:"jobLogBatchSize"`
+	JobLogCommitTimeout		int 		`json:"jobLogCommitTimeout"`
  }
 
 

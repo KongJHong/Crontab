@@ -4,16 +4,17 @@
  * @Author: KongJHong
  * @Date: 2019-08-07 09:53:45
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-07 11:25:46
+ * @LastEditTime: 2019-08-07 15:07:10
  */
 
  package worker
 
 import (
+	"math/rand"
 	"time"
 	"os/exec"
 	"Crontab/common"
-	"context"
+//	"context"
 )
 
 
@@ -50,6 +51,8 @@ func (executor *Executor)ExecuteJob(info *common.JobExecuteInfo){
 		result.StartTime = time.Now()
 
 		//上锁
+		//随机睡眠(0~1s),防止抢锁的倾斜
+		time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
 		err = jobLock.TryLock()
 		defer jobLock.Unlock()	//释放锁
 
@@ -61,7 +64,7 @@ func (executor *Executor)ExecuteJob(info *common.JobExecuteInfo){
 			result.StartTime = time.Now()
 			
 			//执行shell命令
-			cmd = exec.CommandContext(context.TODO(), "C:\\cygwin64\\bin\\bash.exe", "-c",info.Job.Command)
+			cmd = exec.CommandContext(info.CancelCtx, G_config.ShellLocation, "-c",info.Job.Command)
 
 			//执行并捕获输出
 			output,err = cmd.CombinedOutput()

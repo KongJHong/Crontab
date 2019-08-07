@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-06 21:10:09
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-07 10:28:51
+ * @LastEditTime: 2019-08-07 17:02:34
  */
 
 package worker
@@ -33,6 +33,8 @@ var (
 func (scheduler *Scheduler) handleJobEvent(jobEvent *common.JobEvent){
 	var (
 		jobSchedulePlan *common.JobSchedulePlan
+		jobExecuteInfo *common.JobExecuteInfo
+		jobExisting bool
 		jobExisted bool
 		err error
 	)
@@ -45,6 +47,12 @@ func (scheduler *Scheduler) handleJobEvent(jobEvent *common.JobEvent){
 	case common.JOB_EVENT_DELETE:	//删除任务事件
 		if jobSchedulePlan,jobExisted = scheduler.jobPlanTable[jobEvent.Job.Name];jobExisted{
 			delete(scheduler.jobPlanTable,jobEvent.Job.Name)
+		}
+	case common.JOB_EVENT_KILL:	//强杀任务事件
+		//取消掉Command执行
+		if jobExecuteInfo,jobExisting = scheduler.jobExecutingTable[jobEvent.Job.Name];jobExisting{
+			fmt.Println("------------------强杀任务:",jobExecuteInfo.Job.Name)
+			jobExecuteInfo.CancelFunc() //触发command杀死shell子进程，任务得到退出
 		}
 	}
 }
@@ -116,11 +124,36 @@ func (scheduler *Scheduler) TrySchedule()(scheduleAfter time.Duration){
 }
 
 //handleJobResult 处理任务结果
-func (scheduler *Scheduler)handleJobResult(jobReuslt *common.JobExecuteResult){
+func (scheduler *Scheduler)handleJobResult(jobResult *common.JobExecuteResult){
+	var (
+		jobLog *common.JobLog
+	)
 	//删除执行状态
-	delete(scheduler.jobExecutingTable,jobReuslt.ExecuteInfo.Job.Name)
+	delete(scheduler.jobExecutingTable,jobResult.ExecuteInfo.Job.Name)
 
-	fmt.Println("任务执行完成",jobReuslt.ExecuteInfo.Job.Name,string(jobReuslt.Output),jobReuslt.Err)
+	//生成执行日志
+	if jobResult.Err != common.ERR_LOCK_ALREADY_REQUIRED{	//对于抢锁失败的错误，应该跳过
+		jobLog = &common.JobLog{
+			JobName:jobResult.ExecuteInfo.Job.Name,
+			Command:jobResult.ExecuteInfo.Job.Command,
+			Output:string(jobResult.Output),
+			PlanTime:jobResult.ExecuteInfo.PlanTime.UnixNano()/1000/1000,	//精确到毫秒
+			ScheduleTime:jobResult.ExecuteInfo.RealTime.UnixNano()/1000/1000,
+			StartTime:jobResult.StartTime.UnixNano()/1000/1000,
+			EndTime:jobResult.EndTime.UnixNano()/1000/1000,
+		}
+
+		if jobResult.Err != nil{	//防止err是空的情况，会报错
+			jobLog.Err = jobResult.Err.Error()
+		}else{
+			jobLog.Err = ""
+		}
+
+		//TODO:存储到mongodb,不应该在scheduleLoop中进行插入，因为是和硬盘进行操作，会破坏scheduleLoop的执行逻辑，而是应该另开协程
+		G_logSink.Append(jobLog)
+	}
+
+	fmt.Println("任务执行完成",jobResult.ExecuteInfo.Job.Name,string(jobResult.Output),jobResult.Err)
 }
 
 

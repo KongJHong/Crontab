@@ -4,12 +4,13 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:58:52
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-07 10:03:42
+ * @LastEditTime: 2019-08-07 15:51:26
  */
 
  package common
 
 import (
+	"context"
 	"github.com/gorhill/cronexpr"
 	"strings"
 	"encoding/json"
@@ -36,7 +37,10 @@ type JobExecuteInfo struct{
 	Job *Job	//任务信息
 	PlanTime time.Time	//理论上的调度时间
 	RealTime time.Time	//实际的调度时间
+	CancelCtx context.Context	//任务command的context
+	CancelFunc context.CancelFunc //用于取消command执行的cancel函数
 }
+
 
 //Response HTTP接口应答
 type Response struct{
@@ -58,6 +62,23 @@ type JobExecuteResult struct{
 	Err 		error				//脚本错误原因
 	StartTime 	time.Time			//启动时间
 	EndTime		time.Time			//结束时间
+}
+
+//JobLog 任务执行日志 插入到mongodb中的
+type JobLog struct{
+	JobName 		string 	`bson:"jobName"`	//任务名字
+	Command 		string	`bson:"command"`	//脚本命令
+	Err				string	`bson:"err"`		//错误原因
+	Output 			string	`bson:"output"`		//脚本输出
+	PlanTime 		int64	`bson:"planTime"`	//计划开始时间
+	ScheduleTime 	int64	`bson:"scheduleTime"`	//实际调度时间
+	StartTime		int64	`bson:"startTime"`	//任务执行开始时间
+	EndTime			int64	`bson:"endTime"`	//任务执行结束时间
+}
+
+//LogBatch 日志批次
+type LogBatch struct{
+	Logs []interface{}	//多条日志
 }
 
 //BuildResponse 应答方法
@@ -101,6 +122,12 @@ func ExtractJobName(jobKey string) (string){
 	return strings.TrimPrefix(jobKey, JOB_SAVE_DIR)
 }
 
+//ExtractKillerName 从ETCD的key中提取任务名
+// 	/cron/killer/job10 抹掉 /cron/killer/
+func ExtractKillerName(killKey string) (string){
+	return strings.TrimPrefix(killKey, JOB_KILLER_DIR)
+}
+
 //BuildJobEvent 任务变化事件，有两种，1)更新任务，2)删除任务
 func BuildJobEvent(eventType int,job *Job)(jobEvent *JobEvent){
 	return &JobEvent{
@@ -138,6 +165,6 @@ func BuildJobExecuteInfo(planSchedulePlan *JobSchedulePlan) (jobExecuteInfo *Job
 		PlanTime:planSchedulePlan.NextTime,	//计算调度时间
 		RealTime:time.Now(),				//真实调度时间
 	}
-
+	jobExecuteInfo.CancelCtx,jobExecuteInfo.CancelFunc = context.WithCancel(context.TODO())
 	return 
 }
