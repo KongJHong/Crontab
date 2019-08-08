@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:58:52
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-07 20:43:09
+ * @LastEditTime: 2019-08-08 09:41:13
  */
 
  package common
@@ -136,6 +136,11 @@ func ExtractJobName(jobKey string) (string){
 // 	/cron/killer/job10 抹掉 /cron/killer/
 func ExtractKillerName(killKey string) (string){
 	return strings.TrimPrefix(killKey, JOB_KILLER_DIR)
+}
+
+//ExtractWorkerIP 提取/cron/worker/中的关键字
+func ExtractWorkerIP(killKey string) (string){
+	return strings.TrimPrefix(killKey, JOB_WORKER_DIR)
 }
 
 //BuildJobEvent 任务变化事件，有两种，1)更新任务，2)删除任务

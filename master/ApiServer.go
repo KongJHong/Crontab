@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:05:30
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-07 20:02:03
+ * @LastEditTime: 2019-08-08 09:44:17
  */
 
  package master
@@ -226,6 +226,32 @@ ERR:
 	}
 }
 
+//handleWorkerList 获取健康worker节点列表
+func handleWorkerList(resp http.ResponseWriter,req *http.Request){
+	var (
+		workerArr []string
+		err error
+		bytes []byte
+	)
+
+	if workerArr,err = G_workerMgr.ListWorkers();err != nil{
+		goto ERR
+	}
+
+	//返回正常应答
+	if bytes,err = common.BuildResponse(0, "success", workerArr);err == nil{
+		resp.Write(bytes)
+	}
+
+	return 
+ERR:
+	//错误应答
+	if bytes,err = common.BuildResponse(-1, err.Error(), nil);err == nil{
+		resp.Write(bytes)
+	}
+
+}
+
 
 //InitAPIServer HTTP服务器初始化服务函数,开启HTTP服务器
 func InitAPIServer() (err error){
@@ -247,6 +273,7 @@ func InitAPIServer() (err error){
 	mux.HandleFunc("/job/list",handleJobList)		//查
 	mux.HandleFunc("/job/kill",handleJobKill)		//杀死任务
 	mux.HandleFunc("/job/log", handleJobLog)		//任务日志查询
+	mux.HandleFunc("/worker/list", handleWorkerList)//获取worker列表
 
 	//静态文件目录 7.9
 	staticDir = http.Dir(G_config.WebRoot)				//设置静态文件根目录

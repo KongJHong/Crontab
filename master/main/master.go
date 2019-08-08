@@ -4,7 +4,7 @@
  * @Author: KongJHong
  * @Date: 2019-08-05 21:02:05
  * @LastEditors: KongJHong
- * @LastEditTime: 2019-08-07 20:01:05
+ * @LastEditTime: 2019-08-08 09:45:52
  */
 
 
@@ -55,6 +55,11 @@ func main(){
 	//加载配置
 	if err = master.InitConfig(confFile);err != nil{
 		goto ERR
+	}
+
+	//初始化服务发现
+	if err = master.InitWorkerMgr();err != nil{
+		goto ERR 
 	}
 
 	//日志管理器
