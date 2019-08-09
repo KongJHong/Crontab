@@ -15,7 +15,7 @@
     "etcdDialTimeout":5000,
 
     "Web页面根目录":"静态页面前后端分离开发",
-    "webroot":"../webroot",
+    "webroot":"./webroot",
 
     "mongodb地址":"采用mongodb URI",
     "mongodbUri":"mongodb://192.168.80.129:27017",
