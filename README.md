@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: KongJHong
+ * @Date: 2019-08-04 09:39:21
+ * @LastEditors: KongJHong
+ * @LastEditTime: 2019-08-09 22:35:03
+ -->
 ## Crontab 分布式任务调度
 
 ### 主要概念
@@ -15,13 +23,17 @@
 - 并发设计
 - mongodb分布式存储
 - systemclt服务管理
-- nginx负载均衡
 
 ![](https://kongjhong-image.oss-cn-beijing.aliyuncs.com/img/{517CB287-70CA-74B3-664A-9B2631C8E0DD}.jpg)
 
 ### 项目版本
 
 #### mongodb4.0.0
+1. 解压mongodb
+2. cd mongodb
+3. mkdir data
+4. nohup bin/mongod --dbpath=./data --bind_ip=0.0.0.0 & 后台运行
+5. bin/mongo 进入数据库
 
 #### etcd-v3.3.8
 
@@ -35,12 +47,10 @@
  |
  |---master：master框架，主要管理路由等前端逻辑
  |     |---main:程序启动文件夹
+       |    |---webroot:静态页面文件夹
+ |     |    |     |---index.html:前端主界面，调用master的API
  |     |    |---master.go:程序启动main主文件
  |     |    |---master.json:配置文件
- |     |
- |     |---webroot:静态页面文件夹
- |     |    |---index.html:前端主界面，调用master的API
- |     |
  |     |
  |     |---ApiServer.go:HTTP路由管理，前端到后台任务的CRUD
  |     |---Config.go:程序配置类，读取main/master.json中的配置
@@ -69,7 +79,29 @@
 
 
 
+### 项目启动
 
+确定已经配置好Golang开发环境，本程序可在Linux和Windows环境运行，ETCD和MongoDB需要架设在Linux主机环境上
 
+分别修改`/Crontab/master/main/master.json 以及 /Crontab/worker/main/worker.json`文件的IP地址
 
+下面以Linux环境进行演示
+
+```cpp
+git clone https://github.com/KongJHong/Crontab.git
+
+cd Crontab
+
+export $GOPATH=`pwd` 
+
+cd /Crontab/master/main/
+
+修改/Crontab/master/main/master.json 为对应IP地址
+
+go build
+
+./main -config ./master.json 运行起来
+
+worker同理
+```
 

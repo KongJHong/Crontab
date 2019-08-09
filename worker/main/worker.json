@@ -5,7 +5,7 @@
     "etcd连接超时":"单位是毫秒",
     "etcdDialTimeout":5000,
 
-    "Shell命令执行位置":"区分好windows和linux,windows是利用cygwin，linux是/etc/bin/bash",
+    "Shell命令执行位置":"区分好windows和linux,windows是利用cygwin，linux下用whereis bash查找bash路径并填写",
     "shellLocation":"C:\\cygwin64\\bin\\bash.exe",
 
     "mongodb地址":"采用mongodb URI",
